@@ -263,7 +263,7 @@ func TestSetWatchers(t *testing.T) {
 	}
 	defer zk.Close()
 
-	zk.reconnectDelay = time.Second
+	zk.(*Conn).reconnectDelay = time.Second
 
 	zk2, err := ts.ConnectAll()
 	if err != nil {
@@ -294,7 +294,7 @@ func TestSetWatchers(t *testing.T) {
 		t.Fatal("Children should return at least 1 child")
 	}
 
-	zk.conn.Close()
+	zk.Reconnect()
 	if err := zk2.Delete(testPath, -1); err != nil && err != ErrNoNode {
 		t.Fatalf("Delete returned error: %+v", err)
 	}
@@ -356,8 +356,8 @@ func TestExpiringWatch(t *testing.T) {
 		t.Fatal("Children should return at least 1 child")
 	}
 
-	zk.sessionID = 99999
-	zk.conn.Close()
+	zk.(*Conn).sessionID = 99999
+	zk.Reconnect()
 
 	select {
 	case ev := <-childCh:

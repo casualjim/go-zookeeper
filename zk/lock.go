@@ -13,14 +13,14 @@ var (
 )
 
 type Lock struct {
-	c        *Conn
+	c        IConn
 	path     string
 	acl      []ACL
 	lockPath string
 	seq      int
 }
 
-func NewLock(c *Conn, path string, acl []ACL) *Lock {
+func NewLock(c IConn, path string, acl []ACL) *Lock {
 	return &Lock{
 		c:    c,
 		path: path,
